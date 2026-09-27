@@ -211,7 +211,7 @@ func registerOnFirstLaunch() {
 - [x] 1\. `BingClient` + `ImageStore`: 호출·다운로드·저장·`index.json`, 커맨드라인에서 동작 확인
 - [x] 2\. `WallpaperApplier` + 메뉴바 앱 골격: 오늘 이미지를 모든 화면에 적용 (여기서 공식 앱 대체 가능)
 - [x] 3\. 시작 시 체크 + 새로 고침 버튼, `lastAutoDate` 자동 선택 로직
-- [ ] 4\. 자동 시작 토글 (`SMAppService`, 첫 실행 1회 등록), `/Applications` 설치
+- [x] 4\. 자동 시작 토글 (`SMAppService`, 첫 실행 1회 등록), `/Applications` 설치
 - [x] 5\. 이전/다음 버튼 팝오버
 - [ ] 6\. `ScreenObserver`: 모니터 연결·Space 전환 재적용, 회사 듀얼 환경에서 검증
 - [x] 7\. 보관 정책: 오래된 파일 정리(`current` 제외), 보관 기간 메뉴
