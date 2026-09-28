@@ -11,7 +11,7 @@ Bing 오늘의 이미지를 받아 연결된 모든 모니터의 배경화면으
 
 ## 요구 사항
 
-- macOS 15.5 이상
+- macOS 15.0 (Sequoia) 이상
 - 앱은 Apple Silicon·Intel 겸용(유니버설) 빌드
 
 ## 설치
