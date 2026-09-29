@@ -122,6 +122,10 @@ final class WallpaperService: ObservableObject {
         errorMessage = nil
 
         for image in archive {
+            if let position = index.images.firstIndex(where: { $0.date == image.startdate }),
+               index.images[position].searchLink == nil {
+                index.images[position].searchLink = image.copyrightlink
+            }
             guard image.isWallpaperAllowed else {
                 Log.app.info("배경화면 사용 불가(wp=false), 건너뜀: \(image.startdate, privacy: .public)")
                 continue
@@ -138,7 +142,8 @@ final class WallpaperService: ObservableObject {
                     file: file,
                     title: image.title,
                     copyright: image.copyright,
-                    hsh: image.hsh
+                    hsh: image.hsh,
+                    searchLink: image.copyrightlink
                 ))
                 save()
             } catch {

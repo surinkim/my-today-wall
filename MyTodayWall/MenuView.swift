@@ -37,6 +37,14 @@ struct MenuView: View {
         }
         .frame(width: 292, height: 164)
         .clipShape(RoundedRectangle(cornerRadius: 8))
+        .contentShape(Rectangle())
+        .onTapGesture(perform: openSearch)
+        .help(service.currentEntry == nil ? "" : "이 장소 검색")
+    }
+
+    private func openSearch() {
+        guard let url = service.currentEntry?.searchURL else { return }
+        NSWorkspace.shared.open(url)
     }
 
     @ViewBuilder
@@ -50,6 +58,12 @@ struct MenuView: View {
                     .font(.caption)
                     .foregroundStyle(.secondary)
                     .lineLimit(2)
+                Button(action: openSearch) {
+                    Label("이 장소 검색", systemImage: "magnifyingglass")
+                }
+                .buttonStyle(.link)
+                .font(.caption)
+                .padding(.top, 2)
             }
         } else {
             Text(service.isRefreshing ? "이미지를 받는 중입니다." : "아직 받은 이미지가 없습니다.")

@@ -20,6 +20,8 @@ func report(_ service: WallpaperService) {
     print("   current=\(service.index.current ?? "-") lastAutoDate=\(service.index.lastAutoDate ?? "-")"
         + " 목록 \(service.index.images.count)건, 파일 \(files.count)개"
         + " 이전=\(service.canGoPrevious) 다음=\(service.canGoNext)"
+        + " 검색 링크 \(service.index.images.filter { $0.searchLink != nil }.count)건"
+        + " 현재 검색=\(service.currentEntry?.searchURL?.absoluteString ?? "-")"
         + (service.errorMessage.map { " 오류=\($0)" } ?? ""))
 }
 

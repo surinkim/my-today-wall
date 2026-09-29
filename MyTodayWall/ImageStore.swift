@@ -6,6 +6,8 @@ struct ImageEntry: Codable, Equatable {
     let title: String
     let copyright: String
     let hsh: String
+    /// Bing `copyrightlink`. 이 필드가 생기기 전에 받은 이미지는 nil
+    var searchLink: String?
 
     /// "Bears Ears 국립공원... (© 작가)" → "Bears Ears 국립공원..."
     var caption: String {
@@ -15,6 +17,16 @@ struct ImageEntry: Codable, Equatable {
     /// "(© 작가)" 부분
     var credit: String? {
         copyright.range(of: "(©").map { String(copyright[$0.lowerBound...]) }
+    }
+
+    /// 장소 검색 링크. Bing 링크가 없으면 설명 문구로 Bing 검색한다.
+    var searchURL: URL? {
+        if let searchLink, let url = URL(string: searchLink), url.scheme == "https" {
+            return url
+        }
+        var components = URLComponents(string: "https://www.bing.com/search")!
+        components.queryItems = [URLQueryItem(name: "q", value: caption)]
+        return components.url
     }
 }
 

@@ -73,6 +73,7 @@ GET https://www.bing.com/HPImageArchive.aspx?format=js&idx=0&n=8&mkt=ko-KR
 | `urlbase` | 이미지 경로 앞부분. `https://www.bing.com` + `urlbase` + `_UHD.jpg` = 4K 원본 |
 | `url` | 1920x1080 경로. UHD 실패 시 대체 |
 | `title`, `copyright` | 메뉴 목록에 표시할 제목과 출처 |
+| `copyrightlink` | 장소 검색 결과 링크. 팝오버의 "이 장소 검색"으로 연다 |
 | `hsh` | 이미지 해시, 중복 판정 |
 | `wp` | 배경화면 사용 가능 여부. `false`면 건너뜀 |
 
@@ -101,7 +102,8 @@ GET https://www.bing.com/HPImageArchive.aspx?format=js&idx=0&n=8&mkt=ko-KR
   "lastAutoDate": "20260927",
   "images": [
     { "date": "20260927", "file": "20260927_MichelSunset.jpg",
-      "title": "...", "copyright": "...", "hsh": "..." }
+      "title": "...", "copyright": "...", "hsh": "...",
+      "searchLink": "https://www.bing.com/search?q=..." }
   ]
 }
 ```
@@ -115,6 +117,8 @@ GET https://www.bing.com/HPImageArchive.aspx?format=js&idx=0&n=8&mkt=ko-KR
 "오늘"을 로컬 날짜로 판정하지 않는 이유: ko-KR 이미지는 매일 KST 16:00(UTC 07:00, `fullstartdate`)에 바뀌므로, 로컬 날짜와 `startdate`를 맞추면 오전에는 오늘 이미지가 없어 아무것도 적용되지 않는다. 그래서 "받아 둔 것 중 가장 최신 이미지"를 기준으로 한다.
 
 메뉴바 팝오버 구성: 현재 이미지 썸네일 + 제목·날짜, `◀ 이전` · `다음 ▶` · `새로 고침` 버튼. 하단에 `로그인 시 자동 시작` 토글, `보관 기간` 선택, `종료` 버튼.
+
+장소 검색: 썸네일이나 `이 장소 검색`을 누르면 `searchLink`(Bing `copyrightlink`)를 기본 브라우저로 연다. 이 필드가 생기기 전에 받은 이미지는 새로 고침 때 최근 8일 안이면 링크를 채우고, 그보다 오래됐으면 설명 문구로 Bing 검색한다.
 
 1. **앱 시작 / 새로 고침**: 새 이미지를 받아온 뒤, 최신 이미지 날짜가 `lastAutoDate`와 다르면 최신 이미지를 전 화면에 적용하고 `lastAutoDate = 최신 이미지 날짜`
 2. **새 이미지 없이 다시 새로 고침**: 최신 이미지가 `lastAutoDate`와 같으므로 사용자가 고른 이미지를 그대로 유지

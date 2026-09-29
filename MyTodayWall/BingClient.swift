@@ -7,6 +7,8 @@ struct BingImage: Decodable {
     let url: String
     let title: String
     let copyright: String
+    /// 장소 검색 결과 링크 (예: https://www.bing.com/search?q=Kasilof+River+Alaska)
+    let copyrightlink: String?
     let hsh: String
     let wp: Bool?
 
