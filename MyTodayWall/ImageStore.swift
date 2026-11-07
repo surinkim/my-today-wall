@@ -6,20 +6,20 @@ struct ImageEntry: Codable, Equatable {
     let title: String
     let copyright: String
     let hsh: String
-    /// Bing `copyrightlink`. 이 필드가 생기기 전에 받은 이미지는 nil
+    /// Bing `copyrightlink`. nil for images downloaded before this field was added
     var searchLink: String?
 
-    /// "Bears Ears 국립공원... (© 작가)" → "Bears Ears 국립공원..."
+    /// "Bears Ears National Monument... (© Photographer)" → "Bears Ears National Monument..."
     var caption: String {
         copyright.range(of: " (©").map { String(copyright[..<$0.lowerBound]) } ?? copyright
     }
 
-    /// "(© 작가)" 부분
+    /// The "(© Photographer)" part
     var credit: String? {
         copyright.range(of: "(©").map { String(copyright[$0.lowerBound...]) }
     }
 
-    /// 장소 검색 링크. Bing 링크가 없으면 설명 문구로 Bing 검색한다.
+    /// Search link for the place. Without a Bing link, searches Bing for the caption.
     var searchURL: URL? {
         if let searchLink, let url = URL(string: searchLink), url.scheme == "https" {
             return url
@@ -31,11 +31,11 @@ struct ImageEntry: Codable, Equatable {
 }
 
 struct ImageIndex: Codable {
-    /// 지금 걸려 있는 이미지 날짜
+    /// Date of the image currently set as wallpaper
     var current: String?
-    /// 마지막으로 자동 선택한 최신 이미지 날짜
+    /// Date of the newest image last selected automatically
     var lastAutoDate: String?
-    /// 날짜 오름차순
+    /// Sorted by date, oldest first
     var images: [ImageEntry] = []
 
     func image(for date: String) -> ImageEntry? {
@@ -48,7 +48,7 @@ struct ImageIndex: Codable {
     }
 }
 
-/// `~/Pictures/MyTodayWall/`의 이미지 파일과 `index.json`을 관리한다.
+/// Manages the image files and `index.json` in `~/Pictures/MyTodayWall/`.
 final class ImageStore {
     static let defaultDirectory = FileManager.default.homeDirectoryForCurrentUser
         .appending(path: "Pictures/MyTodayWall", directoryHint: .isDirectory)
@@ -66,7 +66,7 @@ final class ImageStore {
         directory.appending(path: entry.file)
     }
 
-    /// 파일이 사라진 항목은 목록에서 뺀다. 파일이 없거나 깨졌으면 빈 목록.
+    /// Drops entries whose files are gone. Returns an empty index if the file is missing or corrupt.
     func loadIndex() -> ImageIndex {
         guard let data = try? Data(contentsOf: indexURL) else { return ImageIndex() }
         do {
@@ -76,7 +76,7 @@ final class ImageStore {
                 .sorted { $0.date < $1.date }
             return index
         } catch {
-            Log.app.error("index.json 파싱 실패: \(error.localizedDescription, privacy: .public)")
+            Log.app.error("Failed to parse index.json: \(error.localizedDescription, privacy: .public)")
             return ImageIndex()
         }
     }
@@ -88,8 +88,8 @@ final class ImageStore {
         try encoder.encode(index).write(to: indexURL, options: .atomic)
     }
 
-    /// 받아 둔 임시 파일을 같은 폴더의 임시 이름으로 옮긴 뒤 최종 이름으로 바꾼다.
-    /// 중간에 꺼져도 최종 이름으로 깨진 파일이 남지 않는다.
+    /// Moves the downloaded temp file to a temporary name in the same folder, then renames it.
+    /// If the app quits midway, no broken file is left under the final name.
     func store(downloaded temp: URL, as fileName: String) throws {
         try fileManager.createDirectory(at: directory, withIntermediateDirectories: true)
         let partial = directory.appending(path: ".\(fileName).partial")
@@ -103,7 +103,7 @@ final class ImageStore {
         }
     }
 
-    /// 보관 기간이 지난 이미지를 지운다. 걸려 있는 `current`는 남긴다. `retentionDays`가 0이면 무제한.
+    /// Deletes images older than the retention period, keeping `current`. `retentionDays` of 0 means keep forever.
     func removeExpired(from index: inout ImageIndex, retentionDays: Int, now: Date = .now) {
         guard retentionDays > 0,
               let cutoff = Calendar.current.date(byAdding: .day, value: -retentionDays, to: now)
@@ -115,7 +115,7 @@ final class ImageStore {
             do {
                 try fileManager.removeItem(at: fileURL(for: entry))
             } catch {
-                Log.app.error("보관 기간 지난 파일 삭제 실패: \(entry.file, privacy: .public)")
+                Log.app.error("Failed to delete expired file: \(entry.file, privacy: .public)")
             }
             return true
         }

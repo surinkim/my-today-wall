@@ -1,80 +1,84 @@
 # MyTodayWall
 
-Bing 오늘의 이미지를 받아 연결된 모든 모니터의 배경화면으로 적용하는 개인용 macOS 메뉴바 앱. 공식 Bing Wallpaper 앱을 대체하려고 만들었다.
+[한국어](README.ko.md)
 
-- 앱을 시작하거나 새로 고침하면 최근 8일치 이미지를 4K(UHD)로 받아 두고, 최신 이미지를 자동으로 건다
-- 이전/다음 버튼으로 받아 둔 이미지를 골라 바로 적용
-- 사진 속 장소를 브라우저에서 바로 검색
-- 모니터 연결·해제, 데스크톱(Space) 전환 때 자동으로 다시 적용
-- 로그인 시 자동 시작, 오래된 이미지 자동 정리(기본 90일)
+A small macOS menu bar app that downloads the Bing image of the day and sets it as the wallpaper on every connected display. Built as a lightweight replacement for the official Bing Wallpaper app.
 
-설계와 결정 사항은 [SPEC.md](SPEC.md)에 있다.
+- Downloads the last 8 days of images in 4K (UHD) on launch and on refresh, and sets the newest one automatically
+- Step through downloaded images with Previous / Next and apply them instantly
+- Search the pictured place in your browser
+- Reapplies automatically when displays are connected or disconnected and when you switch desktops (Spaces)
+- Launches at login and cleans up old images (90 days by default)
 
-## 요구 사항
+Design notes and decisions are in [SPEC.md](SPEC.md).
 
-- macOS 15.0 (Sequoia) 이상
-- 앱은 Apple Silicon·Intel 겸용(유니버설) 빌드
+## Requirements
 
-## 설치
+- macOS 15.0 (Sequoia) or later
+- Universal build (Apple Silicon and Intel)
 
-1. [Releases](https://github.com/surinkim/my-today-wall/releases)에서 `MyTodayWall.zip`을 받아 압축을 푼다
-2. `MyTodayWall.app`을 응용 프로그램 폴더로 옮긴다. 로그인 항목은 `/Applications`에 있을 때만 자동 등록된다
-3. 공증을 받지 않은 로컬 서명 앱이라 격리 표시를 지운다
+## Install
+
+1. Download `MyTodayWall.zip` from [Releases](https://github.com/surinkim/my-today-wall/releases) and unzip it
+2. Move `MyTodayWall.app` to the Applications folder. The login item is registered automatically only when the app runs from `/Applications`
+3. The app is ad-hoc signed and not notarized, so remove the quarantine flag
 
    ```bash
    xattr -dr com.apple.quarantine /Applications/MyTodayWall.app
    ```
 
-4. 실행한다. 첫 실행 때 로그인 항목에 등록되고 이미지를 받아 배경화면을 바꾼다
+4. Launch it. On first launch it registers itself as a login item, downloads images and changes the wallpaper
 
    ```bash
    open /Applications/MyTodayWall.app
    ```
 
-공식 Bing Wallpaper 앱이 함께 돌면 배경화면을 서로 덮어쓰므로, 공식 앱은 삭제하거나 자동 시작을 끈다.
+If the official Bing Wallpaper app is also running, the two apps overwrite each other's wallpaper. Uninstall it or turn off its launch at login.
 
-## 사용법
+## Usage
 
-메뉴바의 사진 아이콘을 누르면 팝오버가 열린다.
+Click the photo icon in the menu bar to open the popover.
 
-| 항목 | 동작 |
+| Item | Action |
 | --- | --- |
-| 썸네일 / `이 장소 검색` | 사진 속 장소의 Bing 검색 결과를 기본 브라우저로 연다 |
-| `◀ 이전` / `다음 ▶` | 받아 둔 이미지를 날짜순으로 넘기며 바로 적용 |
-| `새로 고침` | 새 이미지를 받고, 새 이미지가 나왔으면 최신 이미지로 바꾼다. 새 이미지가 없으면 지금 고른 이미지를 유지 |
-| `로그인 시 자동 시작` | 시스템 설정 → 일반 → 로그인 항목과 같은 설정 |
-| `보관 기간` | 30일 / 90일 / 180일 / 무제한. 지금 걸린 이미지는 기간이 지나도 지우지 않는다 |
+| Thumbnail / `Search this place` | Opens Bing search results for the pictured place in your default browser |
+| `Previous` / `Next` | Steps through downloaded images by date and applies them |
+| `Refresh` | Downloads new images and switches to the newest one if a new image is out. If not, keeps the image you picked |
+| `Launch at login` | Same setting as System Settings → General → Login Items |
+| `Keep images for` | 30 / 90 / 180 days / Forever. The current wallpaper is never deleted, even past the limit |
 
-- ko-KR 이미지는 매일 KST 16:00에 바뀐다. 그 전에는 전날 이미지가 최신이다
-- 앱은 시작할 때와 새로 고침을 누를 때만 확인한다. 잠자기에서 깨어나거나 자정이 지나도 저절로 바뀌지 않는다
+- The image region follows your system language and region (for example `en-US` or `ko-KR`). Regions Bing does not serve get the worldwide image
+- Bing publishes a new image once a day; the time depends on the region (around local midnight for most)
+- The app checks only on launch and when you press Refresh. It does not switch by itself after waking from sleep or at midnight
+- The UI is in English and Korean, following the system language
 
-## 파일 위치
+## Files
 
-| 경로 | 내용 |
+| Path | Contents |
 | --- | --- |
-| `~/Pictures/MyTodayWall/` | 받은 이미지(`yyyyMMdd_이름.jpg`)와 `index.json`(목록, 현재 이미지) |
-| `/Applications/MyTodayWall.app` | 앱 |
+| `~/Pictures/MyTodayWall/` | Downloaded images (`yyyyMMdd_Name.jpg`) and `index.json` (image list, current image) |
+| `/Applications/MyTodayWall.app` | The app |
 
-## 문제 해결
+## Troubleshooting
 
-오류는 `os.Logger`(subsystem `kr.pe.corecode.MyTodayWall`)로 남는다. 지난 로그는 터미널에서 본다.
+Errors are logged with `os.Logger` (subsystem `kr.pe.corecode.MyTodayWall`). View past logs in Terminal:
 
 ```bash
 log show --last 1d --predicate 'subsystem == "kr.pe.corecode.MyTodayWall"' --style compact
 ```
 
-실시간으로 보려면 Console.app에서 하위 시스템 `kr.pe.corecode.MyTodayWall`로 검색하고, 동작 → 정보 메시지 포함을 켠 뒤 시작을 누른다.
+To watch live, search Console.app for subsystem `kr.pe.corecode.MyTodayWall`, turn on Action → Include Info Messages, then press Start.
 
-| 로그 | 원인 |
+| Log message | Cause |
 | --- | --- |
-| `Bing 목록 받기 실패` | 네트워크 문제, 또는 방화벽이 bing.com을 막음 |
-| `이미지 받기 실패` | 이미지 파일 다운로드 실패 |
-| `배경화면 적용 실패 (모니터 이름)` | 해당 모니터에 적용 실패 |
-| `로그인 항목 등록 실패` | 로그인 항목 등록 실패 |
+| `Failed to fetch Bing archive` | Network problem, or a firewall blocking bing.com |
+| `Failed to download image` | An image file failed to download |
+| `Failed to set wallpaper (display name)` | Could not set the wallpaper on that display |
+| `Failed to register login item` | Could not register the login item |
 
-## 소스에서 빌드
+## Build from source
 
-Xcode 16 이상이 필요하다. 서드파티 의존성은 없다.
+Requires Xcode 16 or later. No third-party dependencies.
 
 ```bash
 git clone https://github.com/surinkim/my-today-wall.git
@@ -84,20 +88,30 @@ git clone https://github.com/surinkim/my-today-wall.git
 cd my-today-wall && xcodebuild -project MyTodayWall.xcodeproj -scheme MyTodayWall -configuration Release -derivedDataPath build ARCHS="arm64 x86_64" ONLY_ACTIVE_ARCH=NO build
 ```
 
-결과물은 `build/Build/Products/Release/MyTodayWall.app`이다. 기본 개발 도구가 Command Line Tools로 잡혀 있으면 명령 앞에 `DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer`를 붙인다.
+The result is `build/Build/Products/Release/MyTodayWall.app`. If the active developer directory is Command Line Tools, prefix the command with `DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer`.
 
-앱을 띄우지 않고 핵심 로직(받기·저장·자동 선택·이전/다음·보관 정책)만 실제 API로 확인하려면 아래 스크립트를 쓴다. 임시 폴더에서 돌고 배경화면은 바꾸지 않는다.
+To check the core logic (download, storage, auto-select, previous/next, retention) against the real API without launching the app, run the script below. It works in a temp folder and does not change your wallpaper.
 
 ```bash
 scripts/check-core.sh
 ```
 
-## 제거
+## Uninstall
 
-1. 팝오버에서 `로그인 시 자동 시작`을 끄고 `종료`를 누른다
-2. `/Applications/MyTodayWall.app`을 휴지통으로 옮긴다
-3. 받은 이미지까지 지우려면 `~/Pictures/MyTodayWall/` 폴더를 휴지통으로 옮긴다
+1. In the popover, turn off `Launch at login` and press `Quit`
+2. Move `/Applications/MyTodayWall.app` to the Trash
+3. To remove downloaded images too, move `~/Pictures/MyTodayWall/` to the Trash
 
-## 이미지 이용 범위
+## Notes
 
-이 저장소에는 앱 코드만 있고 Bing 이미지는 포함하지 않는다. 이미지 저작권은 각 사진작가와 에이전시에 있으며, Bing 응답의 조건대로 개인 배경화면 용도로만 쓰고 재배포하지 않는다.
+MyTodayWall uses `HPImageArchive.aspx`, an undocumented Bing endpoint. Its format may change at any time, and the app may stop working until it is updated.
+
+This repository contains only the app's code, no Bing images. Images are downloaded by each user's own app, are copyrighted by their respective photographers and agencies, and are meant for personal wallpaper use only, as stated in Bing's response. Do not redistribute them.
+
+## License
+
+[MIT](LICENSE)
+
+## Disclaimer
+
+MyTodayWall is an independent project and is not affiliated with or endorsed by Microsoft. Bing is a trademark of Microsoft Corporation. All images are copyrighted by their respective owners.

@@ -1,13 +1,13 @@
 import Foundation
 
-/// `HPImageArchive.aspx` 응답의 이미지 한 건
+/// One image from the `HPImageArchive.aspx` response
 struct BingImage: Decodable {
     let startdate: String
     let urlbase: String
     let url: String
     let title: String
     let copyright: String
-    /// 장소 검색 결과 링크 (예: https://www.bing.com/search?q=Kasilof+River+Alaska)
+    /// Search link for the pictured place (e.g. https://www.bing.com/search?q=Kasilof+River+Alaska)
     let copyrightlink: String?
     let hsh: String
     let wp: Bool?
@@ -34,10 +34,20 @@ enum BingClientError: Error {
 struct BingClient {
     static let host = "https://www.bing.com"
 
-    var market = "ko-KR"
+    var market = BingClient.systemMarket
     var session: URLSession = .shared
 
-    /// 최근 8일치 메타데이터를 받는다 (최신이 앞).
+    /// Bing market from the system language and region, e.g. "en-US" or "ko-KR".
+    /// Bing falls back to its worldwide (ROW) image for markets it does not serve.
+    static var systemMarket: String {
+        let locale = Locale.current
+        guard let language = locale.language.languageCode?.identifier,
+              let region = locale.region?.identifier
+        else { return "en-US" }
+        return "\(language)-\(region)"
+    }
+
+    /// Fetches metadata for the last 8 days (newest first).
     func fetchArchive() async throws -> [BingImage] {
         var components = URLComponents(string: "\(Self.host)/HPImageArchive.aspx")!
         components.queryItems = [
@@ -53,12 +63,12 @@ struct BingClient {
         return try JSONDecoder().decode(Archive.self, from: data).images
     }
 
-    /// UHD 원본을 임시 파일로 받는다. 실패하면 1920x1080으로 대체한다.
+    /// Downloads the UHD original to a temporary file, falling back to 1920x1080.
     func downloadImage(_ image: BingImage) async throws -> URL {
         do {
             return try await download(URL(string: Self.host + image.urlbase + "_UHD.jpg"))
         } catch {
-            Log.app.info("UHD 다운로드 실패, 1920x1080으로 대체: \(image.startdate, privacy: .public) \(error.localizedDescription, privacy: .public)")
+            Log.app.info("UHD download failed, falling back to 1920x1080: \(image.startdate, privacy: .public) \(error.localizedDescription, privacy: .public)")
             return try await download(URL(string: Self.host + image.url))
         }
     }

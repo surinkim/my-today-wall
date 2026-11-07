@@ -14,7 +14,7 @@ struct MenuView: View {
             Divider()
             HStack {
                 Spacer()
-                Button("종료") { NSApp.terminate(nil) }
+                Button("Quit") { NSApp.terminate(nil) }
             }
         }
         .padding(14)
@@ -39,7 +39,7 @@ struct MenuView: View {
         .clipShape(RoundedRectangle(cornerRadius: 8))
         .contentShape(Rectangle())
         .onTapGesture(perform: openSearch)
-        .help(service.currentEntry == nil ? "" : "이 장소 검색")
+        .help(service.currentEntry == nil ? Text(verbatim: "") : Text("Search this place"))
     }
 
     private func openSearch() {
@@ -59,14 +59,14 @@ struct MenuView: View {
                     .foregroundStyle(.secondary)
                     .lineLimit(2)
                 Button(action: openSearch) {
-                    Label("이 장소 검색", systemImage: "magnifyingglass")
+                    Label("Search this place", systemImage: "magnifyingglass")
                 }
                 .buttonStyle(.link)
                 .font(.caption)
                 .padding(.top, 2)
             }
         } else {
-            Text(service.isRefreshing ? "이미지를 받는 중입니다." : "아직 받은 이미지가 없습니다.")
+            (service.isRefreshing ? Text("Downloading images…") : Text("No images downloaded yet."))
                 .foregroundStyle(.secondary)
         }
         if let message = service.errorMessage {
@@ -79,13 +79,13 @@ struct MenuView: View {
     private var controls: some View {
         HStack {
             Button { service.previous() } label: {
-                Label("이전", systemImage: "chevron.left")
+                Label("Previous", systemImage: "chevron.left")
             }
             .disabled(!service.canGoPrevious)
 
             Button { service.next() } label: {
                 HStack(spacing: 4) {
-                    Text("다음")
+                    Text("Next")
                     Image(systemName: "chevron.right")
                 }
             }
@@ -99,7 +99,7 @@ struct MenuView: View {
                 if service.isRefreshing {
                     ProgressView().controlSize(.small)
                 } else {
-                    Label("새로 고침", systemImage: "arrow.clockwise")
+                    Label("Refresh", systemImage: "arrow.clockwise")
                 }
             }
             .disabled(service.isRefreshing)
@@ -108,16 +108,16 @@ struct MenuView: View {
 
     private var settings: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Toggle("로그인 시 자동 시작", isOn: Binding(
+            Toggle("Launch at login", isOn: Binding(
                 get: { launchAtLogin },
                 set: { on in
                     LoginItem.setEnabled(on)
                     launchAtLogin = LoginItem.isEnabled
                 }
             ))
-            Picker("보관 기간", selection: $service.retentionDays) {
+            Picker("Keep images for", selection: $service.retentionDays) {
                 ForEach(WallpaperService.retentionChoices, id: \.self) { days in
-                    Text(days == 0 ? "무제한" : "\(days)일").tag(days)
+                    (days == 0 ? Text("Forever") : Text("\(days) days")).tag(days)
                 }
             }
         }

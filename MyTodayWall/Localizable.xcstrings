@@ -1,0 +1,139 @@
+{
+  "sourceLanguage": "en",
+  "strings": {
+    "%lld days": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld일"
+          }
+        }
+      }
+    },
+    "Couldn’t get the image list from Bing.": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bing에서 이미지 목록을 받지 못했습니다."
+          }
+        }
+      }
+    },
+    "Downloading images…": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "이미지를 받는 중입니다."
+          }
+        }
+      }
+    },
+    "Forever": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "무제한"
+          }
+        }
+      }
+    },
+    "Keep images for": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "보관 기간"
+          }
+        }
+      }
+    },
+    "Launch at login": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "로그인 시 자동 시작"
+          }
+        }
+      }
+    },
+    "MyTodayWall": {
+      "shouldTranslate": false
+    },
+    "Next": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "다음"
+          }
+        }
+      }
+    },
+    "No images downloaded yet.": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "아직 받은 이미지가 없습니다."
+          }
+        }
+      }
+    },
+    "Previous": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "이전"
+          }
+        }
+      }
+    },
+    "Quit": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "종료"
+          }
+        }
+      }
+    },
+    "Refresh": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "새로 고침"
+          }
+        }
+      }
+    },
+    "Search this place": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "이 장소 검색"
+          }
+        }
+      }
+    },
+    "Some images couldn’t be downloaded.": {
+      "localizations": {
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "일부 이미지를 받지 못했습니다."
+          }
+        }
+      }
+    }
+  },
+  "version": "1.0"
+}

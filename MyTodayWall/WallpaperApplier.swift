@@ -1,6 +1,6 @@
 import AppKit
 
-/// `setDesktopImageURL`은 각 화면의 현재 Space에만 적용된다.
+/// `setDesktopImageURL` only affects the current Space of each screen.
 struct WallpaperApplier: WallpaperApplying {
     private let options: [NSWorkspace.DesktopImageOptionKey: Any] = [
         .imageScaling: NSImageScaling.scaleProportionallyUpOrDown.rawValue,
@@ -24,7 +24,7 @@ struct WallpaperApplier: WallpaperApplying {
         do {
             try NSWorkspace.shared.setDesktopImageURL(url, for: screen, options: options)
         } catch {
-            Log.app.error("배경화면 적용 실패 (\(screen.localizedName, privacy: .public)): \(error.localizedDescription, privacy: .public)")
+            Log.app.error("Failed to set wallpaper (\(screen.localizedName, privacy: .public)): \(error.localizedDescription, privacy: .public)")
         }
     }
 }

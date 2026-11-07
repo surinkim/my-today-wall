@@ -1,6 +1,6 @@
 import AppKit
 
-/// 모니터 연결·해제와 Space 전환을 감지해 현재 이미지를 다시 적용한다.
+/// Reapplies the current image when displays are connected or disconnected and when the Space changes.
 @MainActor
 final class ScreenObserver {
     private var tokens: [(NotificationCenter, NSObjectProtocol)] = []

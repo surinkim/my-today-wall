@@ -1,6 +1,6 @@
 #!/bin/zsh
-# BingClient·ImageStore·WallpaperService를 커맨드라인으로 빌드해 실제 Bing API로 동작을 확인한다.
-# 사용법: scripts/check-core.sh [저장 폴더]   (기본: 임시 폴더, 실제 ~/Pictures는 건드리지 않음)
+# Builds BingClient, ImageStore and WallpaperService as a command-line tool and checks them against the real Bing API.
+# Usage: scripts/check-core.sh [folder]   (default: a temp folder; ~/Pictures is never touched)
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
