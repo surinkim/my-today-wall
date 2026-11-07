@@ -1,6 +1,6 @@
 # MyTodayWall
 
-[English](README.md)
+<p align="center"><a href="README.md">English</a> | <b>한국어</b></p>
 
 Bing 오늘의 이미지를 받아 연결된 모든 모니터의 배경화면으로 적용하는 macOS 메뉴바 앱. 공식 Bing Wallpaper 앱을 가볍게 대체하려고 만들었다.
 

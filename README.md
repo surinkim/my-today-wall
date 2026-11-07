@@ -1,6 +1,6 @@
 # MyTodayWall
 
-[한국어](README.ko.md)
+<p align="center"><b>English</b> | <a href="README.ko.md">한국어</a></p>
 
 A small macOS menu bar app that downloads the Bing image of the day and sets it as the wallpaper on every connected display. Built as a lightweight replacement for the official Bing Wallpaper app.
 
